@@ -3,7 +3,7 @@ const Student = require('../models/Student');
 const studentRouter = express.Router();
 
 studentRouter.get('/', async(request, response) => {
-  const students = await Student.find();
+  const students = await Student.find().populate('courses');
   response.send(students);
 });
 

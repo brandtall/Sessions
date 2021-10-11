@@ -15,6 +15,10 @@ const courseSchema = new mongoose.Schema({
     type: Number,
     default: 01
   },
+  availableSession: {
+    type: mongoose.Types.ObjectId,
+    ref: 'Session'
+  }
 });
 courseSchema.plugin(uniqueValidator);
 

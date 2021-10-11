@@ -11,7 +11,13 @@ const instructorSchema = new mongoose.Schema({
   passwordHash: {
     type: String,
     required: true
-  }
+  },
+  courses: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: 'Course'
+    }
+  ]
 });
 instructorSchema.plugin(uniqueValidator);
 

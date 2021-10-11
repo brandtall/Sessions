@@ -9,15 +9,16 @@ registerRouter.post('/student', async (request, response) => {
   try {
     const studentId = request.body.studentId;
     const name = request.body.name;
+    const courses = request.body.courses;
     const password = request.body.password;
     const saltRounds = 10;
     const passwordHash = password ? await bcrypt.hash(password, saltRounds) : null;
     const student = new Student({
         name,
         studentId,
-        passwordHash
+        passwordHash,
+        courses
       });
-      console.log(student);
       const savedStudent = await student.save();
       response.json({ savedStudent });
   }
@@ -30,13 +31,15 @@ registerRouter.post('/instructor', async (request, response) => {
   try {
     const instructorId = request.body.instructorId;
     const name = request.body.name;
+    const courses = request.body.courses;
     const password = request.body.password;
     const saltRounds = 10;
     const passwordHash = password ? await bcrypt.hash(password, saltRounds) : null;
     const instructor = new Instructor({
       name,
       instructorId,
-      passwordHash
+      passwordHash,
+      courses
     });
     const savedInstructor = await instructor.save();
     response.json({ savedInstructor });

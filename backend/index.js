@@ -1,9 +1,9 @@
 require('dotenv').config()
 const mongoose = require('mongoose');
 const express = require('express');
-const studentRouter = require('./Controllers/studentController')
-const registerRouter = require('./Controllers/registerRouter');
-const loginRouter = require('./Controllers/loginController');
+const studentRouter = require('./controllers/studentController')
+const registerRouter = require('./controllers/registerRouter');
+const loginRouter = require('./controllers/loginController');
 const cors = require('cors');
 const app = express();
 

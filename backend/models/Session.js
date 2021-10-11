@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
 const sessionSchema = new mongoose.Schema({
-  title: String,
+  title: {
+    type: String,
+    required: true
+  },
   duration: Number,
-  sessionId: Number,
-  type: String,
-  Restrictions: String,
 });
 
 const Session = mongoose.model('Session', sessionSchema);

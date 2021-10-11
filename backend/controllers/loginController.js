@@ -8,7 +8,7 @@ const loginRouter = express.Router();
 loginRouter.post('/', async (request, response) => {
   const userId = request.body.userId;
   const password = request.body.password;
-  const student = await Student.findOne({studentId: userId});
+  const student = await Student.findOne({studentId: userId}).populate('courses');
   const instructor = await Instructor.findOne({instructorId: userId});
   const user = student ? student : instructor ? instructor : null;
   console.log(user)
@@ -21,7 +21,7 @@ loginRouter.post('/', async (request, response) => {
     response.json({error: "Password is incorrect"});
   }
   const token = jwt.sign({user}, process.env.PRIVATE_KEY, {expiresIn: '1h'});
-  response.status(200).json({token})
+  response.status(200).json({token, courses: user.courses})
 })
 
 module.exports = loginRouter;
