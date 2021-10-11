@@ -26,4 +26,4 @@ transform: (document, returnedObject) => {
 
 const Student = mongoose.model('Student', studentSchema);
 
-module.exports = Student;
+module.exports = Student; 
