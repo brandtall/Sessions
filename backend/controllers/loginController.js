@@ -9,11 +9,11 @@ loginRouter.post('/', async (request, response) => {
   const userId = request.body.userId;
   const password = request.body.password;
   const student = await Student.findOne({studentId: userId}).populate('courses');
-  const instructor = await Instructor.findOne({instructorId: userId});
+  const instructor = await Instructor.findOne({instructorId: userId}).populate('courses');
   const user = student ? student : instructor ? instructor : null;
   console.log(user)
   if (!user) {
-    response.status(400).json({error: "User ID is incorrect"});
+    response.json({error: "User ID is incorrect"});
   }
   const passwordHash = user.passwordHash;
   const compare = await bcrypt.compare(password, passwordHash);
