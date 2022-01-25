@@ -1,16 +1,13 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const Student = require('../models/Student');
-const Instructor = require('../models/Instructor');
+const User = require('../models/User');
 const loginRouter = express.Router();
 
 loginRouter.post('/', async (request, response) => {
   const userId = request.body.userId;
   const password = request.body.password;
-  const student = await Student.findOne({studentId: userId}).populate('courses');
-  const instructor = await Instructor.findOne({instructorId: userId}).populate('courses');
-  const user = student ? student : instructor ? instructor : null;
+  const user = await User.findOne({userId}).populate('courses');
   console.log(user)
   if (!user) {
     response.json({error: "User ID is incorrect"});
