@@ -1,23 +1,23 @@
 const express = require('express');
-const Student = require('../models/Student');
 const bcrypt = require('bcrypt');
-const Instructor = require('../models/Instructor');
 const Course = require('../models/Course');
+const User = require('../models/User');
 const registerRouter = express.Router();
 
 registerRouter.post('/student', async (request, response) => {
   try {
-    const studentId = request.body.studentId;
+    const studentId = request.body.userId;
     const name = request.body.name;
     const courses = request.body.courses;
     const password = request.body.password;
     const saltRounds = 10;
     const passwordHash = password ? await bcrypt.hash(password, saltRounds) : null;
-    const student = new Student({
+    const student = new User({
         name,
-        studentId,
+        userId: studentId,
         passwordHash,
-        courses
+        courses,
+        userType: "Student"
       });
       const savedStudent = await student.save();
       response.json({ savedStudent });
@@ -29,17 +29,18 @@ registerRouter.post('/student', async (request, response) => {
 
 registerRouter.post('/instructor', async (request, response) => {
   try {
-    const instructorId = request.body.instructorId;
+    const instructorId = request.body.userId;
     const name = request.body.name;
     const courses = request.body.courses;
     const password = request.body.password;
     const saltRounds = 10;
     const passwordHash = password ? await bcrypt.hash(password, saltRounds) : null;
-    const instructor = new Instructor({
+    const instructor = new User({
       name,
-      instructorId,
+      userId: instructorId,
       passwordHash,
-      courses
+      courses,
+      userType: "Instructor"
     });
     const savedInstructor = await instructor.save();
     response.json({ savedInstructor });
