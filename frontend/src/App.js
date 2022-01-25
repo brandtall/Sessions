@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import socketIOClient from "socket.io-client";
 import axios from 'axios';
 
 
@@ -12,35 +13,108 @@ const Documents = (props) => {
   );
 }
 
-const Session = (props) => {
+const Room = (props) => {
+  const [response, setResponse] = useState("");
+  useEffect(() => {
+    const socket = socketIOClient("http://localhost:3005");
+    socket.on("FromAPI", data => {
+      setResponse(data);
+    })
+    return () => socket.disconnect();
+  }, []);
   return (
     <div>
-      <h1>Session My Friend</h1>
-      <button onClick={() => props.setTab(0)}>Back</button>
+      Inside sessions {props.session.title} with ID: {props.session._id} with Response: {response}
     </div>
+  );
+}
+
+const Session = (props) => {
+  const [sessionForm, setSessionForm] = useState("none");
+  const [sessionTitle, setSessionTitle] = useState("");
+  const [sessionDuration, setSessionDuration] = useState(0);
+  const [selectedSession, setSelectedSession] = useState(false);
+  const [session, setSession] = useState(null);
+  const handleSessionForm = () => {
+    return sessionForm === "none" ? setSessionForm("block") : setSessionForm("none")
+  }
+  const handleSessionCreation = async () => {
+    const session = {
+      title: sessionTitle,
+      duration: sessionDuration,
+      course: props.courseId,
+      instructor: props.userId
+    }
+    const results = await axios.post('localhost:3003', { session });
+    console.log(results.body)
+  }
+  const handleSessionTitle = (event) => {
+    setSessionTitle(event.target.value);
+  }
+  const handleSessionDuration = (event) => {
+    setSessionDuration(event.target.value);
+  }
+  const handleSessionJoin = (s) => {
+    const userSelectedSession = props.sessions.find((session) => session.title === s);
+    setSession(userSelectedSession);
+    setSelectedSession(true);
+  }
+  return (
+    <div>
+      {selectedSession ?
+        <div>
+          <Room session = {session} />
+        </div>
+        :
+        <div>
+          <h1>Session My Friend</h1>
+          <div>
+            {props.sessions.map((session) => {
+              return (
+                <p key={session.id} onClick={() => handleSessionJoin(session.title)}>{session.title}</p>
+              );
+            })}
+          </div>
+          <button onClick={() => props.setTab(0)}>Back</button>
+          <form style={{ display: sessionForm }} onSubmit={handleSessionCreation}>
+            <label>
+              Session title:
+              <input type="text" value={sessionTitle} onChange={handleSessionTitle} required />
+            </label>
+            <label>
+              Session Duration:
+              <input type="number" value={sessionDuration} onChange={handleSessionDuration} required />
+            </label>
+            <input type="submit" value="Submit" />
+          </form>
+          <button onClick={handleSessionForm}>Create Session</button>
+        </div>
+      }
+    </div>
+
   );
 }
 
 const IndividualCourse = (props) => {
   return (
     <div>
-      {props.tab === 0 ? 
+      {props.tab === 0 ?
         <div>
           <p>CRN:{props.course.courseId}</p>
           <p>Title: {props.course.title}</p>
           <p>Section: {props.course.section}</p>
-          <button onClick = {() => props.setTab(1)}>Course Documents</button> <br/>
-          <button onClick = {() => props.setTab(2)}>View all sessions</button> <br/>
+          <button onClick={() => props.setTab(1)}>Course Documents</button> <br />
+          <button onClick={() => props.setTab(2)}>View all sessions</button> <br />
           <button onClick={() => props.setSelected(false)}>Back</button>
         </div> : props.tab === 1 ?
-        <div>
-          <Documents setTab = {props.setTab}/>
-        </div>
-        : props.tab === 2 ?
-        <div>
-          <Session setTab = {props.setTab} />
-        </div>
-        : null}
+          <div>
+            <Documents setTab={props.setTab} />
+          </div>
+          : props.tab === 2 ?
+            <div>
+              <Session setTab={props.setTab} sessions={props.sessions} setSessions={props.setSessions} courseId={props.course.courseId} userId={props.userId} />
+            </div>
+            : null}
     </div>
   );
 }
@@ -59,7 +133,8 @@ const Courseslist = (props) => {
         </div>
       }
       {props.selected &&
-        <IndividualCourse course = {props.course} setSelected = {props.setSelected} tab = {props.tab} setTab = {props.setTab}/>
+        <IndividualCourse course={props.course} setSelected={props.setSelected} tab={props.tab} setTab={props.setTab}
+          sessions={props.sessions} setSessions={props.setSessions} />
 
       }
 
@@ -88,6 +163,13 @@ const App = () => {
   const [course, setCourse] = useState({});
   const [selected, setSelected] = useState(false);
   const [tab, setTab] = useState(0);
+  const [sessions, setSessions] = useState([{ title: "Hello", id: 123 }, { title: "He", id: 121 }, { title: "Heo", id: 122 }]);
+
+  useEffect(() => {
+    // Token Admistration
+    return () => {
+    }
+  }, [])
 
   const handleUserId = (event) => {
     setUserId(event.target.value);
@@ -127,7 +209,7 @@ const App = () => {
       {
         loggedIn &&
         <Courseslist courses={courses} handleCourse={handleCourse} setLoggedIn={setLoggedIn} selected={selected} course={course}
-          setSelected={setSelected} tab = {tab} setTab = {setTab}/>
+          setSelected={setSelected} tab={tab} setTab={setTab} sessions={sessions} setSessions={setSessions} />
       }
     </div>
   );
