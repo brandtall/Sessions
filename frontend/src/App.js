@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import socketIOClient from "socket.io-client";
 import axios from 'axios';
+import {v4 as uuidv4} from 'uuid';
 
 
 
@@ -38,15 +39,16 @@ const Session = (props) => {
   const handleSessionForm = () => {
     return sessionForm === "none" ? setSessionForm("block") : setSessionForm("none")
   }
-  const handleSessionCreation = async () => {
-    const session = {
+  const handleSessionCreation = async (e) => {
+    e.preventDefault();
+    const sessionId = uuidv4();
+    const results = await axios.post('http://localhost:3003/session', {
+      sessionId,
       title: sessionTitle,
       duration: sessionDuration,
       course: props.courseId,
       instructor: props.userId
-    }
-    const results = await axios.post('localhost:3003', { session });
-    console.log(results.body)
+    });
   }
   const handleSessionTitle = (event) => {
     setSessionTitle(event.target.value);
@@ -76,6 +78,7 @@ const Session = (props) => {
             })}
           </div>
           <button onClick={() => props.setTab(0)}>Back</button>
+          <button onClick={handleSessionForm}>Toggle Form</button>
           <form style={{ display: sessionForm }} onSubmit={handleSessionCreation}>
             <label>
               Session title:
@@ -87,7 +90,6 @@ const Session = (props) => {
             </label>
             <input type="submit" value="Submit" />
           </form>
-          <button onClick={handleSessionForm}>Create Session</button>
         </div>
       }
     </div>
@@ -189,7 +191,6 @@ const App = () => {
       setCourses(response.data.courses);
       setLoggedIn(true);
     }
-    console.log(response.data, loggedIn);
   }
 
   const handleCourse = (c) => {
