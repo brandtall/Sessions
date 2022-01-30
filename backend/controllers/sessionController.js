@@ -18,4 +18,10 @@ sessionRouter.post('/', async (request, response) => {
     response.send(savedSession);
 });
 
+sessionRouter.get('/', async (request, response) => {
+    const body = request.body;
+    const sessions = await Session.find();
+    response.send(sessions);
+})
+
 module.exports = sessionRouter;
