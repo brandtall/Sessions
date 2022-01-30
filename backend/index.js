@@ -4,6 +4,7 @@ const express = require('express');
 const http = require("http");
 const registerRouter = require('./controllers/registerRouter');
 const loginRouter = require('./controllers/loginController');
+const sessionRouter = require('./controllers/sessionController');
 const cors = require('cors');
 const socketIo = require("socket.io");
 const userRouter = require('./controllers/userController');
@@ -25,6 +26,7 @@ app.use(express.json());
 app.use('/users', userRouter);
 app.use('/register', registerRouter);
 app.use('/login', loginRouter);
+app.use('/session', sessionRouter);
 app.get('/', (request, response) => {
   response.send("Hello!");
 });
@@ -44,5 +46,5 @@ const io = socketIo(server, {
 io.on("connection", (socket) => {
   console.log("new user");
   io.emit("FromAPI", "Hi frontend");
-  
+
 })
