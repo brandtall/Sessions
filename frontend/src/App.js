@@ -25,7 +25,7 @@ const Room = (props) => {
   }, []);
   return (
     <div>
-      Inside sessions {props.session.title} with ID: {props.session._id} with Response: {response}
+      Inside sessions {props.session.title} with ID: {props.session.sessionId} with Response: {response}
     </div>
   );
 }
@@ -36,13 +36,25 @@ const Session = (props) => {
   const [sessionDuration, setSessionDuration] = useState(0);
   const [selectedSession, setSelectedSession] = useState(false);
   const [session, setSession] = useState(null);
+  const [sessionsList, setSessionsList] = useState([]);
+
+  useEffect(() => {
+    setSessionsList([]);
+    const getSessions = async () => {
+      const sessions = await axios.get('http://localhost:3003/session');
+      console.log(sessions.data);
+      setSessionsList(sessionsList.concat(sessions.data));
+    }
+    getSessions();
+  }, [])
+
   const handleSessionForm = () => {
     return sessionForm === "none" ? setSessionForm("block") : setSessionForm("none")
   }
   const handleSessionCreation = async (e) => {
     e.preventDefault();
     const sessionId = uuidv4();
-    const results = await axios.post('http://localhost:3003/session', {
+    await axios.post('http://localhost:3003/session', {
       sessionId,
       title: sessionTitle,
       duration: sessionDuration,
@@ -57,7 +69,8 @@ const Session = (props) => {
     setSessionDuration(event.target.value);
   }
   const handleSessionJoin = (s) => {
-    const userSelectedSession = props.sessions.find((session) => session.title === s);
+    const userSelectedSession = sessionsList.find((session) => session.sessionId === s);
+    console.log(userSelectedSession);
     setSession(userSelectedSession);
     setSelectedSession(true);
   }
@@ -71,11 +84,13 @@ const Session = (props) => {
         <div>
           <h1>Session My Friend</h1>
           <div>
-            {props.sessions.map((session) => {
+            {sessionsList !== [] ? 
+            sessionsList.map((s) => {
               return (
-                <p key={session.id} onClick={() => handleSessionJoin(session.title)}>{session.title}</p>
+                <p key={s.sessionId} onClick={() => handleSessionJoin(s.sessionId)}>{s.title}</p>
               );
-            })}
+            })
+          : <div></div> }
           </div>
           <button onClick={() => props.setTab(0)}>Back</button>
           <button onClick={handleSessionForm}>Toggle Form</button>
@@ -114,7 +129,7 @@ const IndividualCourse = (props) => {
           </div>
           : props.tab === 2 ?
             <div>
-              <Session setTab={props.setTab} sessions={props.sessions} setSessions={props.setSessions} courseId={props.course.courseId} userId={props.userId} />
+              <Session setTab={props.setTab} courseId={props.course.courseId} userId={props.userId} />
             </div>
             : null}
     </div>
@@ -135,8 +150,7 @@ const Courseslist = (props) => {
         </div>
       }
       {props.selected &&
-        <IndividualCourse course={props.course} setSelected={props.setSelected} tab={props.tab} setTab={props.setTab}
-          sessions={props.sessions} setSessions={props.setSessions} />
+        <IndividualCourse course={props.course} setSelected={props.setSelected} tab={props.tab} setTab={props.setTab}/>
 
       }
 
@@ -165,7 +179,6 @@ const App = () => {
   const [course, setCourse] = useState({});
   const [selected, setSelected] = useState(false);
   const [tab, setTab] = useState(0);
-  const [sessions, setSessions] = useState([{ title: "Hello", id: 123 }, { title: "He", id: 121 }, { title: "Heo", id: 122 }]);
 
   useEffect(() => {
     // Token Admistration
@@ -210,7 +223,7 @@ const App = () => {
       {
         loggedIn &&
         <Courseslist courses={courses} handleCourse={handleCourse} setLoggedIn={setLoggedIn} selected={selected} course={course}
-          setSelected={setSelected} tab={tab} setTab={setTab} sessions={sessions} setSessions={setSessions} />
+          setSelected={setSelected} tab={tab} setTab={setTab}/>
       }
     </div>
   );
