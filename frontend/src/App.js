@@ -14,18 +14,62 @@ const Documents = (props) => {
   );
 }
 
-const Room = (props) => {
-  const [response, setResponse] = useState("");
-  useEffect(() => {
-    const socket = socketIOClient("http://localhost:3005");
-    socket.on("FromAPI", data => {
-      setResponse(data);
-    })
-    return () => socket.disconnect();
-  }, []);
+const Message = (props) => {
+  props.socket.on("response", (data) => props.setResponse(props.response.concat(data)));
   return (
     <div>
-      Inside sessions {props.session.title} with ID: {props.session.sessionId} with Response: {response}
+      {props.response.map((e, index) => {
+        return (
+          <p key={index}>{e}</p>
+        );
+      })}
+    </div>
+  );
+}
+const MessageInput = (props) => {
+  const handleMessageChange = (event) => {
+    props.setMessage(event.target.value);
+  }
+  const handleMessageSubmit = (event) => {
+    event.preventDefault();
+    props.socket.emit("message", props.userName + ": " + props.message);
+    props.setMessage("");
+  }
+  return (
+    <div>
+      <form onSubmit={handleMessageSubmit}>
+        <label>
+          message:
+          <input value={props.message} type="text" placeholder='type message here' onChange={handleMessageChange}/>
+        </label>
+        <button type="submit">Send</button>
+      </form>
+    </div>
+  );
+}
+
+const Room = (props) => {
+  const [response, setResponse] = useState([])
+  const [message, setMessage] = useState("");
+  const [socket, setSocket] = useState(null);
+  useEffect(() => {
+    let newSocket = socketIOClient("http://localhost:3003", {withCredentials: true});
+    setSocket(newSocket);
+    return () => newSocket.disconnect();
+  }, []);
+  
+  
+  return (
+    <div>
+      Inside sessions {props.session.title} with ID: {props.session.sessionId}
+      {socket ? 
+      <div>
+        <Message socket = {socket} message = {message} setMessage = {setMessage} response = {response} setResponse = {setResponse}
+        /> 
+        <MessageInput socket = {props.socket} message = {message} setMessage = {setMessage} response = {response} setResponse = {setResponse}
+        userName = {props.userName} />
+      </div>
+      : <p>No Socket Connection Yet...</p>}
     </div>
   );
 }
@@ -38,11 +82,11 @@ const Session = (props) => {
   const [session, setSession] = useState(null);
   const [sessionsList, setSessionsList] = useState([]);
 
+
   useEffect(() => {
     setSessionsList([]);
     const getSessions = async () => {
       const sessions = await axios.get('http://localhost:3003/session');
-      console.log(sessions.data);
       setSessionsList(sessionsList.concat(sessions.data));
     }
     getSessions();
@@ -70,7 +114,6 @@ const Session = (props) => {
   }
   const handleSessionJoin = (s) => {
     const userSelectedSession = sessionsList.find((session) => session.sessionId === s);
-    console.log(userSelectedSession);
     setSession(userSelectedSession);
     setSelectedSession(true);
   }
@@ -78,7 +121,7 @@ const Session = (props) => {
     <div>
       {selectedSession ?
         <div>
-          <Room session = {session} />
+          <Room session = {session} userId = {props.userId} userName = {props.userName}/>
         </div>
         :
         <div>
@@ -129,7 +172,8 @@ const IndividualCourse = (props) => {
           </div>
           : props.tab === 2 ?
             <div>
-              <Session setTab={props.setTab} courseId={props.course.courseId} userId={props.userId} />
+              <Session setTab={props.setTab} courseId={props.course.courseId} userId={props.userId} userName = {props.userName}
+              userType = {props.userType}/>
             </div>
             : null}
     </div>
@@ -150,7 +194,8 @@ const Courseslist = (props) => {
         </div>
       }
       {props.selected &&
-        <IndividualCourse course={props.course} setSelected={props.setSelected} tab={props.tab} setTab={props.setTab}/>
+        <IndividualCourse course={props.course} setSelected={props.setSelected} tab={props.tab} setTab={props.setTab} userName = {props.userName}
+        userType = {props.userType}/>
 
       }
 
@@ -173,6 +218,8 @@ const LogInForm = (props) => {
 
 const App = () => {
   const [userId, setUserId] = useState('');
+  const [userName, setUserName] = useState('');
+  const [userType, setUserType] = useState('');
   const [password, setPassword] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
   const [courses, setCourses] = useState([]);
@@ -201,6 +248,8 @@ const App = () => {
       password
     });
     if (response.status === 200) {
+      setUserName(response.data.user.name);
+      setUserType(response.data.user.userType);
       setCourses(response.data.courses);
       setLoggedIn(true);
     }
@@ -223,7 +272,7 @@ const App = () => {
       {
         loggedIn &&
         <Courseslist courses={courses} handleCourse={handleCourse} setLoggedIn={setLoggedIn} selected={selected} course={course}
-          setSelected={setSelected} tab={tab} setTab={setTab}/>
+          setSelected={setSelected} tab={tab} setTab={setTab} userName = {userName} userType = {userType}/>
       }
     </div>
   );
