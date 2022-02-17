@@ -31,20 +31,20 @@ app.get('/', (request, response) => {
   response.send("Hello!");
 });
 
-
-app.listen(process.env.PORT, () => {
-  console.log("Listening at port " + process.env.PORT);
-});
-
-server.listen(3005);
 const io = socketIo(server, {
   cors: {
     origin: "http://localhost:3000",
-    methods: ["GET", "POST"]
+    methods: ["GET", "POST"],
+    credentials: true,
   }
 });
 io.on("connection", (socket) => {
-  console.log("new user");
-  io.emit("FromAPI", "Hi frontend");
+  console.log(io.sockets)
+  socket.on("message", (arg) => {
+    io.emit("response", arg);
+  })  
+  socket.emit("FromAPI", "Hi frontend");
 
 })
+
+server.listen(process.env.PORT);
