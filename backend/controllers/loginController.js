@@ -17,7 +17,7 @@ loginRouter.post('/', async (request, response) => {
       response.json({ error: "Password is incorrect" });
     } else {
       const token = jwt.sign({ user }, process.env.PRIVATE_KEY, { expiresIn: '1h' });
-      response.status(200).json({ token, courses: user.courses })
+      response.status(200).json({ user, token, courses: user.courses })
     }
   }
 
