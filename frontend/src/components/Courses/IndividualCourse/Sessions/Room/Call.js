@@ -1,18 +1,15 @@
 import { useEffect } from "react"
 const Call = (props) => {
     useEffect(() => {
-        if(props.socketId) {
-            if (!props.callEstablished) {
-                props.answerCall();
-                if (!props.recievedCall) {
-                    props.makeCall();
-                }
-            }
-            else {
-                props.changeIceCandidates();
-            }
-        }
-    }, [props.recievedCall, props.callEstablished, props.socketId]);
+        props.socket.emit("initCall", {"from": props.socketId, 'peerId': props.myId});
+        props.socket.on("callRequest", (arg) => {
+            props.makeCall(arg);
+        });
+        props.socket.on("makeCall", () => {
+            console.log("Hello");
+            props.answerCall();
+        });
+    }, []);
     return (
         <div>
             Call on
