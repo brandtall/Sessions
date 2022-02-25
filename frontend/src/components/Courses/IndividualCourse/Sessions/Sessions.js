@@ -3,6 +3,7 @@ import axios from "axios";
 import { v4 as uuidv4 }  from "uuid";
 import Room from "./Room/Room";
 import SocketContext from "./Room/SocketContext";
+import PeerComponent from './Room/Peer';
 
 const Session = (props) => {
     const [sessionForm, setSessionForm] = useState("none");
@@ -50,7 +51,7 @@ const Session = (props) => {
       <div>
         {selectedSession ?
           <div>
-            <SocketContext />
+            <PeerComponent />
           </div>
           :
           <div>
