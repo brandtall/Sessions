@@ -1,9 +1,11 @@
 import Peer from 'peerjs';
 import { useEffect, useState } from 'react';
 import Socket from 'socket.io-client';
-import {v4 as uuidv4} from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import Call from './Call';
+import RemoteVideos from './RemoteVideos';
 import UserVideo from './userVideo';
+const localId = uuidv4();
 
 
 const PeerComponent = () => {
@@ -14,9 +16,8 @@ const PeerComponent = () => {
     const [socketId, setSocketId] = useState("");
     const [peer, setPeer] = useState(null);
     useEffect(() => {
-        let io = new Socket('http://localhost:3003',{withCredentials: true});
+        let io = new Socket('http://localhost:3003', { withCredentials: true });
         setSocket(io);
-        const localId = uuidv4();
         setMyId(localId);
         const localPeer = new Peer(localId);
         setPeer(localPeer);
@@ -27,34 +28,48 @@ const PeerComponent = () => {
         return () => io.disconnect();
     }, []);
 
-    const getVideo = async() => {
-        const localStream = await navigator.mediaDevices.getUserMedia({video: true, audio: true});
-        setMyStream(localStream);    
+    // useEffect(() => {
+    //     if(peer) {
+    //         const updatedRemoteStreams = [];
+    //         Object.keys(peer.connections).forEach((e) => {
+    //             updatedRemoteStreams.push(peer.connections[e][0]._remoteStream);
+    //         });
+    //         setRemoteStream([...updatedRemoteStreams]);
+    //     }
+    // }, [peer])
+
+    const getVideo = async () => {
+        const localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        setMyStream(localStream);
     }
 
     const makeCall = async (arg) => {
         const localCall = await peer.call(arg.peerId, myStream);
         console.log(localCall);
         localCall.on("stream", (stream) => {
-            console.log("Remote Stream");
-            setRemoteStream(remoteStream.concat(stream));
+            // setRemoteStream([...remoteStream, stream]);
         });
-        socket.emit("makeCall", {"to": arg.from});
+        socket.emit("makeCall", { "to": arg.from });
     }
     const answerCall = async () => {
         peer.on("call", (call) => {
             const answer = call.answer(myStream);
             console.log("Answer")
             call.on("stream", (stream) => {
-                console.log("Remote Stream");
-                setRemoteStream(remoteStream.concat(stream));
+                // setRemoteStream([...remoteStream, stream]);
             });
+            console.log(peer.connections);
         });
     }
     return (
         <div>
-            {socket && myStream && peer && myId ? <Call socket = {socket} myId = {myId} peer = {peer} socketId = {socketId} makeCall = {makeCall} answerCall = {answerCall}/> : <div></div>}
-            {myStream ? <UserVideo myStream = {myStream} /> : <div></div>}
+            {socket && myStream && peer && myId ?
+                <div>
+                    <Call socket={socket} myId={myId} peer={peer} socketId={socketId} makeCall={makeCall} answerCall={answerCall} />
+                    <UserVideo myStream={myStream} />
+                    <RemoteVideos remoteStream={remoteStream} peer={peer} remoteStream={remoteStream} setRemoteStream={setRemoteStream}/> 
+                </div>
+                : <div></div>}
         </div>
     )
 }
