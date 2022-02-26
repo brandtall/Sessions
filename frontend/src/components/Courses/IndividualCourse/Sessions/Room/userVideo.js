@@ -4,10 +4,10 @@ import { createRef, useEffect } from "react"
 const UserVideo = (props) => {
     const localVideo = createRef();
     useEffect(() => {
-        localVideo.current.srcObject = props.localStream;
-        localVideo.current.onloadedmetadata = (e) => {
-            localVideo.current.play();
-          }
+        localVideo.current.srcObject = props.myStream;
+        // localVideo.current.onloadedmetadata = (e) => {
+        //     localVideo.current.play();
+        //   }
     }, [])
     return (
         <div>
