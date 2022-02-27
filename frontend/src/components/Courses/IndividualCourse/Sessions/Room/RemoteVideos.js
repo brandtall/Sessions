@@ -1,38 +1,18 @@
-import { createRef, useEffect, useState } from "react";
+import {useEffect, useRef } from "react";
 
 const RemoteVideos = (props) => {
-    const [remoteVideosList, setremoteVideosList] = useState([]);
-    
+    const videosRef = useRef([]);
     useEffect(() => {
-        updateStreams();
-    }, [])
-
-    useEffect(() => {
-        showPeers();
-    }, [props.remoteStream])
-
-
-    const updateStreams = () => {
-        const updatedRemoteStreams = [];
-        Object.keys(props.peer.connections).forEach((e) => {
-            updatedRemoteStreams.push(props.peer.connections[e][0]._remoteStream);
-            setremoteVideosList([...RemoteVideos, createRef()])
+        props.remoteStream.forEach((e, i) => {
+            videosRef.current[i].srcObject = e;
         });
-        props.setRemoteStream([...updatedRemoteStreams]);
-    }
-    const showPeers = () => {
-        props.remoteStream.forEach((e) => {
-            const newRemoteVideo = createRef();
-            newRemoteVideo.current.srcObject = e;
-        })
-    }
-
+    }, [props.remoteStream]);
 
     return (
         <div>
-            {remoteVideosList.map((rv) => {
+            {props.remoteStream.map((e, i) => {
                 return (
-                    <video ref={rv} autoPlay playsInline controls={false} />
+                    <video key = {i} ref={(el) => videosRef.current[i] = el} autoPlay playsInline controls={false} />
                 );
             })}
         </div>

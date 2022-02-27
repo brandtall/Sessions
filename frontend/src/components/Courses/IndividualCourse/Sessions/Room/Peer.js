@@ -47,7 +47,9 @@ const PeerComponent = () => {
         const localCall = await peer.call(arg.peerId, myStream);
         console.log(localCall);
         localCall.on("stream", (stream) => {
-            // setRemoteStream([...remoteStream, stream]);
+            if(stream.id !== myStream.id) {
+                setRemoteStream((prevArray) => [...prevArray, stream]);
+            }
         });
         socket.emit("makeCall", { "to": arg.from });
     }
@@ -56,7 +58,9 @@ const PeerComponent = () => {
             const answer = call.answer(myStream);
             console.log("Answer")
             call.on("stream", (stream) => {
-                // setRemoteStream([...remoteStream, stream]);
+                if(stream.id !== myStream.id) {
+                    setRemoteStream((prevArray) => [...prevArray, stream]);
+                }
             });
             console.log(peer.connections);
         });
@@ -67,7 +71,8 @@ const PeerComponent = () => {
                 <div>
                     <Call socket={socket} myId={myId} peer={peer} socketId={socketId} makeCall={makeCall} answerCall={answerCall} />
                     <UserVideo myStream={myStream} />
-                    <RemoteVideos remoteStream={remoteStream} peer={peer} remoteStream={remoteStream} setRemoteStream={setRemoteStream}/> 
+                    {remoteStream ? <RemoteVideos remoteStream={remoteStream} peer={peer} remoteStream={remoteStream} setRemoteStream={setRemoteStream}/>
+                    : <div></div>} 
                 </div>
                 : <div></div>}
         </div>
