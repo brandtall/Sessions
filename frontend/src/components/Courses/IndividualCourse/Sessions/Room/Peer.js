@@ -83,7 +83,7 @@ const PeerComponent = (props) => {
             {socket && myStream && peer && socketId ?
                 <div>
                     <Call socket={socket} peer={peer} socketId={socketId} makeCall={makeCall} answerCall={answerCall} />
-                    <UserVideo myStream={myStream} />
+                    <UserVideo myStream={myStream} peer={peer}/>
                     {remoteStream ? <RemoteVideos remoteStream={remoteStream} peer={peer} remoteStream={remoteStream} setRemoteStream={setRemoteStream} />
                         : <div></div>}
                 </div>
