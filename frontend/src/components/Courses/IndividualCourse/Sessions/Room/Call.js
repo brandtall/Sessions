@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 const Call = (props) => {
     useEffect(() => {
-        props.socket.emit("initCall", {"from": props.socketId, 'peerId': props.myId});
+        props.socket.emit("initCall", {"from": props.socketId, 'peerId': props.socketId});
         props.socket.on("callRequest", (arg) => {
             props.makeCall(arg);
         });
