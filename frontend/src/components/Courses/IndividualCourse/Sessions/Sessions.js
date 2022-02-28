@@ -51,7 +51,7 @@ const Session = (props) => {
       <div>
         {selectedSession ?
           <div>
-            <PeerComponent />
+            <PeerComponent userName = {props.userName} />
           </div>
           :
           <div>
