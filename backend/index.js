@@ -42,21 +42,20 @@ io.on("connection", (socket) => {
   console.log("Socket connected");
   socket.emit("id", socket.id);
   socket.on("initCall", (arg) => {
-    console.log("initiate call", arg);
     socket.broadcast.emit("callRequest", arg);
   });
   socket.on("makeCall", (arg) => {
     socket.to(arg.to).emit("makeCall", arg);
-    console.log("Make Call", arg);
   });
   socket.on("answerCall", (arg) => {
-    console.log("Pong");
-    console.log(arg.from);
     socket.to(arg.to).emit("answerCall", arg);
-  })
+  });
   socket.on("message", (arg) => {
     io.emit("response", arg);
-  })  
+  });
+  socket.on("disconnect", () => {
+    socket.broadcast.emit("closeCall", socket.id);
+  })
   socket.emit("FromAPI", "Hi frontend");
 
 })
