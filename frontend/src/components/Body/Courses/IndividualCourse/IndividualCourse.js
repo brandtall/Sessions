@@ -5,15 +5,18 @@ import Session from "./Sessions/Sessions";
 const IndividualCourse = (props) => {
   const [tab, setTab] = useState(0);
     return (
-      <div>
+      <div className="Card">
         {tab === 0 ?
-          <div>
+          <div className="card-content">
             <p>CRN:{props.course.courseId}</p>
             <p>Title: {props.course.title}</p>
             <p>Section: {props.course.section}</p>
-            <button onClick={() => setTab(1)}>Course Documents</button> <br />
-            <button onClick={() => setTab(2)}>View all sessions</button> <br />
-            <button onClick={() => props.setSelected(false)}>Back</button>
+            <div className="buttons">
+            <button className="button is-info" onClick={() => setTab(1)}>Course Documents</button>
+            <button className="button is-info" onClick={() => setTab(2)}>View all sessions</button>
+            <button className="button is-info" onClick={() => props.setSelected(false)}>Back</button>
+            </div>
+
           </div> : tab === 1 ?
             <div>
               <Documents setTab={setTab} />

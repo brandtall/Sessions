@@ -1,5 +1,5 @@
 import LogInForm from "../Login/LoginForm";
-import Courseslist from "../Courses/CourseList";
+import Courseslist from "./Courses/CourseList";
 import axios from 'axios';
 import { useState, useEffect } from "react";
 

@@ -58,11 +58,33 @@ const Session = (props) => {
             <h1>Session My Friend</h1>
             <div>
               {sessionsList !== [] ? 
-              sessionsList.map((s) => {
+
+              <table className="table">
+              <thead>
+                <tr>
+                  <th>Number</th>
+                  <th>Session Title</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <th>Number</th>
+                  <th>Session Title</th>
+                </tr>
+              </tfoot>
+              <tbody>
+              {sessionsList.map((s, i) => {
                 return (
-                  <p key={s.sessionId} onClick={() => handleSessionJoin(s.sessionId)}>{s.title}</p>
+                  <tr>
+                    <th key={s.sessionId}>{i + 1}</th>
+                    <td>
+                      <p key={s.sessionId} onClick={() => handleSessionJoin(s.sessionId)}>{s.title}</p>
+                    </td>
+                  </tr>
                 );
-              })
+              })}
+              </tbody>
+            </table>
             : <div></div> }
             </div>
             <button onClick={() => props.setTab(0)}>Back</button>

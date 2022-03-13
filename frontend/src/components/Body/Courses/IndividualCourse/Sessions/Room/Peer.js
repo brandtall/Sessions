@@ -79,22 +79,27 @@ const PeerComponent = (props) => {
         });
     }
     return (
-        <div>
+        <div className='columns'>
             {socket && myStream && peer && socketId ?
-                <div>
+                <div className='column is-two-thirds'>
                     <Call socket={socket} peer={peer} socketId={socketId} makeCall={makeCall} answerCall={answerCall} />
-                    <UserVideo myStream={myStream} peer={peer}/>
-                    {remoteStream ? <RemoteVideos remoteStream={remoteStream} peer={peer} remoteStream={remoteStream} setRemoteStream={setRemoteStream} />
+                    {remoteStream ? <RemoteVideos remoteStream={remoteStream} peer={peer} setRemoteStream={setRemoteStream} />
                         : <div></div>}
+                    <UserVideo myStream={myStream} peer={peer}/>
                 </div>
                 : <div></div>}
             {socket ?
-                <div>
-                    <Message socket={socket} message={message} setMessage={setMessage} response={response} setResponse={setResponse}
-                    />
-                    <MessageInput socket={socket} message={message} setMessage={setMessage} response={response} setResponse={setResponse}
+                <table className='column is-one-third table table-container is-bordered'>
+                    <tr>
+                     <Message socket={socket} message={message} setMessage={setMessage} response={response} setResponse={setResponse}
+                     /> 
+                    </tr>
+                    <tr>
+                     <MessageInput socket={socket} message={message} setMessage={setMessage} response={response} setResponse={setResponse}
                         userName={props.userName} />
-                </div>
+                    </tr>
+
+                </table>
                 : <p>No Socket Connection Yet...</p>}
         </div>
     )

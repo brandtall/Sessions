@@ -1,10 +1,10 @@
 const LogInForm = (props) => {
     return (
-      <div>
+      <div className="container">
         <h1>Login</h1>
         <form onSubmit={props.handleSubmit}>
-          User ID: <input type='text' value={props.userId} onChange={props.handleUserId}></input> <br />
-          Password: <input type='password' value={props.password} onChange={props.handlePassword}></input> <br />
+          User ID: <input className="input is-primary" type='text' value={props.userId} onChange={props.handleUserId}></input> <br />
+          Password: <input className="input is-primary" type='password' value={props.password} onChange={props.handlePassword}></input> <br />
           <button type='submit'>Log In</button>
         </form>
       </div>
