@@ -1,4 +1,4 @@
-# Session
+# Sessions
 
 Full stack educational portal and video conferencing app toy project. This project is created for educational and training purposes and as such is not fit for real world usage (I mean check the demo).
 
