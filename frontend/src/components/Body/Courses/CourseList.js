@@ -11,7 +11,7 @@ const Courseslist = (props) => {
   
     }
     return (
-      <div>
+      <div className="columns is-mobile is-centered">
         {!selected &&
           <table className="table">
             <thead>

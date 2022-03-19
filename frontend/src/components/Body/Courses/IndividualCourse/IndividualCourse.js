@@ -5,7 +5,7 @@ import Session from "./Sessions/Sessions";
 const IndividualCourse = (props) => {
   const [tab, setTab] = useState(0);
     return (
-      <div className="Card">
+      <div className="container">
         {tab === 0 ?
           <div className="card-content">
             <p>CRN:{props.course.courseId}</p>

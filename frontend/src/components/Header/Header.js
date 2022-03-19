@@ -1,7 +1,7 @@
 const Header = () => {
     return (
         <div className="navbar">
-            <p className="navbar-brand">Sessions</p>
+            <span className="navbar-brand">Sessions</span>
         </div>
     );
 }

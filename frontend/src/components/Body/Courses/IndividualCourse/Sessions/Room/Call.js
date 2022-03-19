@@ -12,7 +12,6 @@ const Call = (props) => {
     }, []);
     return (
         <div>
-            Call on
         </div>
     );
 }
