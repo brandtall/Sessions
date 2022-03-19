@@ -4,10 +4,10 @@ Full stack educational portal and video conferencing app toy project. This proje
 
 # Tech Stack
 
-Frontend: React
-Backend: NodeJS + ExpressJS
-Technologies: WebRTC (through PeerJS), Socket.io
-Database: MongoDB (through mongoose).
+1. Frontend: React
+2. Backend: NodeJS + ExpressJS
+3. Technologies: WebRTC (through PeerJS), Socket.io
+4. Database: MongoDB (through mongoose).
 
 # System Architecture
 ![System Architecture](Architecture.png)
