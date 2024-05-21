@@ -21,7 +21,7 @@ const connectDB = async() => {
   }
 }
 connectDB();
-app.use(cors());
+app.use(cors());;
 app.use(express.json());
 app.use('/users', userRouter);
 app.use('/register', registerRouter);
@@ -56,7 +56,7 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     socket.broadcast.emit("closeCall", socket.id);
   })
-  socket.emit("FromAPI", "Hi frontend");
+  socket.emit("FromAPI", "Hi Frontend");
 
 })
 
