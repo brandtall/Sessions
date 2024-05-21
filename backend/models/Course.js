@@ -13,7 +13,7 @@ const courseSchema = new mongoose.Schema({
   },
   section: {
     type: Number,
-    default: 01
+    default: 0o1
   },
   availableSession: {
     type: mongoose.Types.ObjectId,
