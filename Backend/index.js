@@ -1,16 +1,12 @@
 import {App, initializeApp} from "./app";
 
-require('dotenv').config()
-const mongoose = require('mongoose');
-const express = require('express');
-const http = require("http");
-const registerRouter = require('./controllers/registerRouter');
-const loginRouter = require('./controllers/loginController');
-const sessionRouter = require('./controllers/sessionController');
-const cors = require('cors');
-const socketIo = require("socket.io");
-const userRouter = require('./controllers/userController');
+import mongoose from "mongoose";
 
+import http from "http";
+
+import socket from "socket.io";
+
+require('dotenv').config()
 let app = App();
 const server = http.createServer(app);
 
@@ -28,7 +24,7 @@ connectDB();
 
 initializeApp(app);
 
-const io = socketIo(server, {
+const io = socket(server, {
     cors: {
         origin: "http://localhost:3000",
         methods: ["GET", "POST"],
