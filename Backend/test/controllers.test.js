@@ -6,4 +6,9 @@ describe('Controllers', () => {
             assert.ok(true);
         });
     });
+    describe('GET /login', () => {
+        it('Should return OK', () => {
+            assert.ok(true);
+        });
+    })
 });
