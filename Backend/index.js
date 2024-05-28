@@ -1,3 +1,5 @@
+import {App} from "./app";
+
 require('dotenv').config()
 const mongoose = require('mongoose');
 const express = require('express');
@@ -8,7 +10,8 @@ const sessionRouter = require('./controllers/sessionController');
 const cors = require('cors');
 const socketIo = require("socket.io");
 const userRouter = require('./controllers/userController');
-const app = express();
+
+let app = App();
 const server = http.createServer(app);
 
 // TODO replace console logs with proper logging
