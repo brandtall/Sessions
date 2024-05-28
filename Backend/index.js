@@ -1,4 +1,4 @@
-import {App} from "./app";
+import {App, initializeApp} from "./app";
 
 require('dotenv').config()
 const mongoose = require('mongoose');
@@ -25,15 +25,8 @@ const connectDB = async () => {
     }
 }
 connectDB();
-app.use(cors());
-app.use(express.json());
-app.use('/users', userRouter);
-app.use('/register', registerRouter);
-app.use('/login', loginRouter);
-app.use('/session', sessionRouter);
-app.get('/', (request, response) => {
-    response.send("Hello!");
-});
+
+initializeApp(app);
 
 const io = socketIo(server, {
     cors: {
