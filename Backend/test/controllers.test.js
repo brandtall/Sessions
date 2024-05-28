@@ -10,11 +10,5 @@ describe('Controllers', () => {
         it('Should return OK', () => {
             assert.ok(true);
         });
-    });
-
-    describe('GET /register', () => {
-        it('Should return OK', () => {
-            assert.ok(true);
-        })
     })
 });
