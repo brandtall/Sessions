@@ -11,6 +11,8 @@ const userRouter = require('./controllers/userController');
 const app = express();
 const server = http.createServer(app);
 
+// TODO replace console logs with proper logging
+
 const connectDB = async() => {
   try {
   await mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
