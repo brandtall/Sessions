@@ -1,5 +1,7 @@
-const express = require('express');
-const Session = require('../models/Session');
+import express from "express";
+
+import Session from "../models/Session.js";
+
 const sessionRouter = express.Router();
 
 sessionRouter.post('/', async (request, response) => {
@@ -24,4 +26,4 @@ sessionRouter.get('/', async (request, response) => {
     response.send(sessions);
 })
 
-module.exports = sessionRouter;
+export default sessionRouter;

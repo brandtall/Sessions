@@ -1,9 +1,9 @@
 import express from "express";
 import cors from "cors";
-import userRouter from "./controllers/userController";
-import registerRouter from "./controllers/registerRouter";
-import loginRouter from "./controllers/loginController";
-import sessionRouter from "./controllers/sessionController";
+import userRouter from "./controllers/userController.js";
+import registerRouter from "./controllers/registerRouter.js";
+import loginRouter from "./controllers/loginController.js";
+import sessionRouter from "./controllers/sessionController.js";
 
 export function App() {
     return express();

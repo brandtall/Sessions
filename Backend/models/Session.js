@@ -1,5 +1,6 @@
-const mongoose = require('mongoose');
-const uniqueValidator = require('mongoose-unique-validator');
+import mongoose from "mongoose";
+
+import uniqueValidator from "mongoose-unique-validator";
 
 const sessionSchema = new mongoose.Schema({
   sessionId: {
@@ -34,4 +35,4 @@ sessionSchema.set('toJSON', {
 
 const Session = mongoose.model('Session', sessionSchema);
 
-module.exports = Session;
+export default Session;

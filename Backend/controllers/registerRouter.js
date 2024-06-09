@@ -1,7 +1,11 @@
-const express = require('express');
-const bcrypt = require('bcrypt');
-const Course = require('../models/Course');
-const User = require('../models/User');
+import express from "express";
+
+import bcrypt from "bcrypt";
+
+import Course from "../models/Course.js";
+
+import User from "../models/User.js";
+
 const registerRouter = express.Router();
 
 registerRouter.post('/student', async (request, response) => {
@@ -66,4 +70,4 @@ registerRouter.post('/course', async (request, response) => {
   }
 });
 
-module.exports = registerRouter;
+export default registerRouter;
