@@ -6,7 +6,7 @@ app = App();
 initializeApp(app)
 
 describe('Test Controllers', () => {
-    test("It should response the GET method", done => {
+    test("Should return 200 for root path", done => {
         request(app)
             .get("/")
             .then(response => {
