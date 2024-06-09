@@ -1,10 +1,9 @@
 import {App, initializeApp} from "./app";
 
-import mongoose from "mongoose";
-
 import http from "http";
 
 import socket from "socket.io";
+import {connectDB} from "./connectDB.js";
 
 require('dotenv').config()
 let app = App();
@@ -12,14 +11,6 @@ const server = http.createServer(app);
 
 // TODO replace console logs with proper logging
 
-const connectDB = async () => {
-    try {
-        await mongoose.connect(process.env.MONGODB_URI, {useNewUrlParser: true, useUnifiedTopology: true});
-        console.log("on");
-    } catch (err) {
-        console.error(err);
-    }
-}
 connectDB();
 
 initializeApp(app);

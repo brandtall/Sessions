@@ -3,9 +3,7 @@
   "name": "backend",
   "jest": {
     "verbose": true,
-    "transform": {
-
-    }
+    "transform": {}
   },
   "version": "1.0.0",
   "description": "",
@@ -28,6 +26,7 @@
   },
   "devDependencies": {
     "jest": "^29.7.0",
+    "mockingoose": "^2.16.2",
     "nodemon": "^2.0.15",
     "supertest": "^7.0.0"
   }
