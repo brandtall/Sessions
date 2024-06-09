@@ -27,10 +27,11 @@ describe('Test Controllers', () => {
         userType: "Instructor",
         };
     mockingoose(User).toReturn(user, 'find')
-    test("Should return 200 for users path", done => {
+    test("Should return users list for users path", done => {
         request(app)
             .get("/users/")
             .then(response => {
+                expect(response.statusCode).toBe(200);
                 expect(response.body.id).toEqual(user._id);
                 done();
             })
